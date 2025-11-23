@@ -56,6 +56,9 @@ declare global {
       switchToGemini: (apiKey?: string) => Promise<{ success: boolean; error?: string }>
       testLlmConnection: () => Promise<{ success: boolean; error?: string }>
       
+      triggerMcq: () => Promise<void>
+      triggerCoding: () => Promise<void>
+
       invoke: (channel: string, ...args: any[]) => Promise<any>
     }
   }

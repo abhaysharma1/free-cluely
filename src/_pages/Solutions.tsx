@@ -48,11 +48,13 @@ export const ContentSection = ({
 const SolutionSection = ({
   title,
   content,
-  isLoading
+  isLoading,
+  language = "python"
 }: {
   title: string
   content: React.ReactNode
   isLoading: boolean
+  language?: string
 }) => (
   <div className="space-y-2">
     <h2 className="text-[13px] font-medium text-white tracking-wide">
@@ -70,7 +72,7 @@ const SolutionSection = ({
       <div className="w-full">
         <SyntaxHighlighter
           showLineNumbers
-          language="python"
+          language={language}
           style={dracula}
           customStyle={{
             maxWidth: "100%",
@@ -491,11 +493,20 @@ const Solutions: React.FC<SolutionsProps> = ({ setView }) => {
               <div className="px-4 py-3 space-y-4 max-w-full">
                 {/* Show Screenshot or Audio Result as main output if validation_type is manual */}
                 {problemStatementData?.validation_type === "manual" ? (
-                  <ContentSection
-                    title={problemStatementData?.output_format?.subtype === "voice" ? "Audio Result" : "Screenshot Result"}
-                    content={problemStatementData.problem_statement}
-                    isLoading={false}
-                  />
+                  problemStatementData?.output_format?.type === "code" ? (
+                    <SolutionSection
+                      title="Code Solution"
+                      content={problemStatementData.problem_statement}
+                      isLoading={false}
+                      language={problemStatementData.output_format.subtype || "cpp"}
+                    />
+                  ) : (
+                    <ContentSection
+                      title={problemStatementData?.output_format?.subtype === "voice" ? "Audio Result" : "Screenshot Result"}
+                      content={problemStatementData.problem_statement}
+                      isLoading={false}
+                    />
+                  )
                 ) : (
                   <>
                     {/* Problem Statement Section - Only for non-manual */}

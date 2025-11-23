@@ -19,7 +19,7 @@ export class WindowHelper {
   // Initialize with explicit number type and 0 value
   private screenWidth: number = 0
   private screenHeight: number = 0
-  private step: number = 0
+  private step: number = 20
   private currentX: number = 0
   private currentY: number = 0
 
@@ -98,7 +98,7 @@ export class WindowHelper {
     }
 
     this.mainWindow = new BrowserWindow(windowSettings)
-    // this.mainWindow.webContents.openDevTools()
+    // this.mainWindow.webContents.openDevTools({ mode: "detach" })
     this.mainWindow.setContentProtection(true)
 
     if (process.platform === "darwin") {

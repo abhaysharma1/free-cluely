@@ -284,6 +284,37 @@ export class LLMHelper {
     }
   }
 
+  public async analyzeImageMcq(imagePath: string) {
+    return this.analyzeImageFile(imagePath);
+  }
+
+  public async analyzeImageCoding(imagePath: string) {
+    try {
+      const imageData = await fs.promises.readFile(imagePath);
+      const imagePart = {
+        inlineData: {
+          data: imageData.toString("base64"),
+          mimeType: "image/png",
+        },
+      };
+      const prompt = `
+      Analyze the coding problem in this image.
+      Provide ONLY the C++ code solution.
+      Do NOT include any explanations, comments, or markdown formatting (like \`\`\`cpp).
+      Do NOT include time/space complexity analysis.
+      Just the raw code.
+    `;
+      const result = await this.model.generateContent([prompt, imagePart]);
+      const response = await result.response;
+      const text = response.text();
+      return { text, timestamp: Date.now() };
+    } catch (error) {
+      console.error("Error analyzing image file for coding:", error);
+      throw error;
+    }
+  }
+
+
   public async chatWithGemini(message: string): Promise<string> {
     try {
       if (this.useOllama) {

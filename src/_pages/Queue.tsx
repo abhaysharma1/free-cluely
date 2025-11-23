@@ -242,6 +242,20 @@ const Queue: React.FC<QueueProps> = ({ setView }) => {
               onChatToggle={handleChatToggle}
               onSettingsToggle={handleSettingsToggle}
             />
+            <div className="flex gap-2 mt-2 justify-center">
+              <button
+                onClick={() => window.electronAPI.triggerMcq()}
+                className="px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-200 text-xs rounded border border-blue-500/30 transition-colors"
+              >
+                Solve MCQ (Ctrl+Shift+M)
+              </button>
+              <button
+                onClick={() => window.electronAPI.triggerCoding()}
+                className="px-3 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 text-xs rounded border border-purple-500/30 transition-colors"
+              >
+                Solve Coding (Ctrl+Shift+C)
+              </button>
+            </div>
           </div>
           {/* Conditional Settings Interface */}
           {isSettingsOpen && (

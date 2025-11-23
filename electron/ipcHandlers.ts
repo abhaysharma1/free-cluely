@@ -196,4 +196,21 @@ export function initializeIpcHandlers(appState: AppState): void {
       return { success: false, error: error.message };
     }
   });
+
+  // New IPC handlers for MCQ and Coding modes
+  ipcMain.handle("trigger-mcq", async () => {
+    try {
+      await appState.processingHelper.processMcq();
+    } catch (error) {
+      console.error("Error triggering MCQ mode:", error);
+    }
+  });
+
+  ipcMain.handle("trigger-coding", async () => {
+    try {
+      await appState.processingHelper.processCoding();
+    } catch (error) {
+      console.error("Error triggering Coding mode:", error);
+    }
+  });
 }

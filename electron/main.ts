@@ -280,6 +280,11 @@ async function initializeApp() {
     appState.createTray()
     // Register global shortcuts using ShortcutsHelper
     appState.shortcutsHelper.registerGlobalShortcuts()
+    
+    // Verify shortcuts are registered after a short delay
+    setTimeout(() => {
+      appState.shortcutsHelper.verifyShortcuts()
+    }, 1000)
   })
 
   app.on("activate", () => {

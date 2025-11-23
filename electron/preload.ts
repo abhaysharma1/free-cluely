@@ -42,6 +42,10 @@ interface ElectronAPI {
   switchToGemini: (apiKey?: string) => Promise<{ success: boolean; error?: string }>
   testLlmConnection: () => Promise<{ success: boolean; error?: string }>
   
+  triggerMcq: () => Promise<void>
+  triggerCoding: () => Promise<void>
+  onToggleChat: (callback: () => void) => () => void
+
   invoke: (channel: string, ...args: any[]) => Promise<any>
 }
 
@@ -171,21 +175,20 @@ contextBridge.exposeInMainWorld("electronAPI", {
       ipcRenderer.removeListener(PROCESSING_EVENTS.UNAUTHORIZED, subscription)
     }
   },
-  moveWindowLeft: () => ipcRenderer.invoke("move-window-left"),
-  moveWindowRight: () => ipcRenderer.invoke("move-window-right"),
-  moveWindowUp: () => ipcRenderer.invoke("move-window-up"),
-  moveWindowDown: () => ipcRenderer.invoke("move-window-down"),
-  analyzeAudioFromBase64: (data: string, mimeType: string) => ipcRenderer.invoke("analyze-audio-base64", data, mimeType),
-  analyzeAudioFile: (path: string) => ipcRenderer.invoke("analyze-audio-file", path),
-  analyzeImageFile: (path: string) => ipcRenderer.invoke("analyze-image-file", path),
-  quitApp: () => ipcRenderer.invoke("quit-app"),
-  
-  // LLM Model Management
-  getCurrentLlmConfig: () => ipcRenderer.invoke("get-current-llm-config"),
+  onToggleChat: (callback: () => void) => {
+    const subscription = () => callback()
+    ipcRenderer.on("toggle-chat", subscription)
+    return () => {
+      ipcRenderer.removeListener("toggle-chat", subscription)
+    }
+  },
   getAvailableOllamaModels: () => ipcRenderer.invoke("get-available-ollama-models"),
   switchToOllama: (model?: string, url?: string) => ipcRenderer.invoke("switch-to-ollama", model, url),
   switchToGemini: (apiKey?: string) => ipcRenderer.invoke("switch-to-gemini", apiKey),
   testLlmConnection: () => ipcRenderer.invoke("test-llm-connection"),
   
+  triggerMcq: () => ipcRenderer.invoke("trigger-mcq"),
+  triggerCoding: () => ipcRenderer.invoke("trigger-coding"),
+
   invoke: (channel: string, ...args: any[]) => ipcRenderer.invoke(channel, ...args)
 } as ElectronAPI)
